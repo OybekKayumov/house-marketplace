@@ -16,8 +16,12 @@ function SignIn() {
 
   const navigate = useNavigate()
 
-  const onChange = () => {
-
+  const onChange = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      // to get this two values we cab write(email: e.target.value, password: e.target.value,)
+      [e.target.id]: e.target.value
+    }))
   }
   
   return (
