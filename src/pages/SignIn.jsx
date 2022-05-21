@@ -63,7 +63,20 @@ function SignIn() {
           >
             Forgot Password
           </Link>
+
+          <div className='signInBar'>
+            <p className='signInText'>Sign In</p>
+            <button className='signInButton'>
+              <ArrowRightIcon fill='#fff' width='34px' height='34px' />
+            </button>
+          </div>
+
         </form>
+
+        {/* Google OAuth */}
+        <Link to='/sign-up' className='registerLink'>
+          Sign Up Instead
+        </Link>
 
       </div>
     </>
