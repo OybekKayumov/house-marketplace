@@ -13,7 +13,6 @@ import PrivateRoute from "./components/PrivateRoute";
 function App() {
   return (
     <>
-      <h1>My App</h1>
       <Router>
         <Routes>
           <Route path="/" element={<Explore />} />
