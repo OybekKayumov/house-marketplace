@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { getAuth, updateProfile } from 'firebase/auth'
-import { updateDoc } from 'firebase/firestore'
+import { updateDoc, doc } from 'firebase/firestore'
 import { db } from '../firebase.config'
 import { useNavigate, Link } from 'react-router-dom'
-
+import { async } from '@firebase/util'
+import { toast } from 'react-toastify'
 
 function Profile() {
   const auth = getAuth()
@@ -32,8 +33,34 @@ function Profile() {
     navigate('/');
   }
  
-  const onSubmit = () => {
-    console.log(123);
+  // update data on firebase when edited with Change Button
+  const onSubmit = async () => {
+    // console.log(123);
+    try {
+      if (auth.currentUser.displayName !== name) {
+        // update display Name in firebase
+        await updateProfile(auth.currentUser, {
+          displayName: name
+        })
+
+        // update in fireStore
+        const userRef = doc(db, 'users', auth.currentUser.uid)
+        await updateDoc(userRef, {
+          name
+        })
+      }
+    } catch (error) {
+      toast.error('Could not update Profile details')
+    }
+  }
+
+  const onChange = (e) => {
+    // update form data state and return object in ({})
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.id]: e.target.value
+    }))
+
   }
 
   return (
@@ -62,6 +89,34 @@ function Profile() {
           >
             {changeDetails ? 'done' : 'change'}
           </p>
+        </div>
+
+        <div className='profileCard'>
+            <form>
+              <input 
+                type="text" 
+                id='name' 
+                // if not changeDetails(if it's false) , then we want the class to be 'profileName', else 'profileNameActive'
+                // we set class depending on the state
+                className={!changeDetails ? 'profileName' : 'profileNameActive'}
+                
+                // we want to be disabled if changeDetails false, so we can't do anything (vN90, 5min)
+                disabled={!changeDetails}  
+                
+                value= {name}
+                onChange={onChange}
+              />
+
+              <input 
+                type="text" 
+                id='email'               
+                className={!changeDetails ? 'profileEmail' : 'profileEmailActive'}
+                disabled={!changeDetails}  
+                value= {email}
+                onChange={onChange}
+              />
+
+            </form>
 
         </div>
       </main>
